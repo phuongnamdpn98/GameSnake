@@ -38,6 +38,7 @@
 
     public static void Game(int level)
     {
+
         int width = 40;
         int height = 20;
         Point food;
@@ -46,26 +47,31 @@
         Random rand = new Random();
         int score = 0;
 
-        food = new Point(rand.Next(1, width - 2), rand.Next(1, height - 2));
+        food = new Point(rand.Next(1, width - 1), rand.Next(1, height - 1));
 
         snake.Add(new Point(12, 10));
         snake.Add(new Point(11, 10));
         snake.Add(new Point(10, 10));
 
-        DateTime lastTime = DateTime.Now;
+        DateTime lastMove = DateTime.Now;
+
+
+        DrawBorder(width, height);
+
         while (true)
         {
-            DrawBorder(width, height);
-
-            foreach (Point s in snake)
+            // vẽ rắn
+            foreach (var s in snake)
             {
                 Console.SetCursorPosition(s.X, s.Y);
                 Console.Write("O");
             }
 
+            // vẽ điểm ăn
             Console.SetCursorPosition(food.X, food.Y);
             Console.Write("*");
 
+            // kiểm tra nhấn kí tự
             if (Console.KeyAvailable)
             {
                 ConsoleKey key = Console.ReadKey(true).Key;
@@ -98,12 +104,70 @@
                         break;
                 }
             }
-        }
 
-        Console.SetCursorPosition(0, height = 1);
+            // di chuyển rắn theo thời gian
+            if ((DateTime.Now - lastMove).TotalMilliseconds > level)
+            {
+                lastMove = DateTime.Now;
+
+                // xóa đuôi rắn
+                Point tail = snake[snake.Count - 1];
+                Console.SetCursorPosition(tail.X, tail.Y);
+                Console.Write(" ");
+                snake.RemoveAt(snake.Count - 1);
+
+                // thêm đầu rắn
+                Point head = snake[0];
+                Point newHead = head;
+
+                switch (direction)
+                {
+                    case Direction.Up:
+                        newHead.Y--;
+                        break;
+                    case Direction.Down:
+                        newHead.Y++;
+                        break;
+                    case Direction.Left:
+                        newHead.X--;
+                        break;
+                    case Direction.Right:
+                        newHead.X++;
+                        break;
+                }
+                // kiểm tra va chạm với biên
+                if (newHead.X == 0 || newHead.X == width - 1
+                    || newHead.Y == 0 || newHead.Y == height - 1
+                    || snake.Any(s => s.X == newHead.X && s.Y == newHead.Y))
+                {
+                    Console.SetCursorPosition(width / 2 - 5, height / 2);
+                    Console.WriteLine("GAME OVER");
+                    Console.SetCursorPosition(width / 2 - 5, height / 2 + 1);
+                    Console.WriteLine("Your score: " + score);
+                    Console.SetCursorPosition(width / 2 - 12, height / 2 + 2);
+                    Console.WriteLine("Press any key to exit...");
+                    Console.ReadKey();
+                    break;
+                }
+
+                snake.Insert(0, newHead);
+
+                // kiểm tra ăn điểm
+                if (newHead.X == food.X && newHead.Y == food.Y)
+                {
+                    score++;
+                    snake.Add(tail); // tăng độ dài rắn
+                    food = new Point(rand.Next(1, width - 2), rand.Next(1, height - 2));
+                }
+
+                Thread.Sleep(1);
+            }
+
+        }
+        Console.SetCursorPosition(0, height + 1);
     }
 
-    public static void Main(string[] args)
+    public static void Main()
     {
         int choiceMenu = -1;
         Console.CursorVisible = false;
@@ -144,6 +208,7 @@
                             Console.WriteLine("Invalid level selected. Please try again.");
                             break;
                     }
+                    
                     Game(level);
                     break;
                 case 0:
