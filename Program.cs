@@ -55,7 +55,6 @@
 
         DateTime lastMove = DateTime.Now;
 
-
         DrawBorder(width, height);
 
         while (true)
@@ -71,7 +70,7 @@
             Console.SetCursorPosition(food.X, food.Y);
             Console.Write("*");
 
-            // kiểm tra nhấn kí tự
+            // kiểm tra kí tự
             if (Console.KeyAvailable)
             {
                 ConsoleKey key = Console.ReadKey(true).Key;
@@ -135,7 +134,8 @@
                         newHead.X++;
                         break;
                 }
-                // kiểm tra va chạm với biên
+
+                // kiểm tra va chạm với biên và thân rắn
                 if (newHead.X == 0 || newHead.X == width - 1
                     || newHead.Y == 0 || newHead.Y == height - 1
                     || snake.Any(s => s.X == newHead.X && s.Y == newHead.Y))
@@ -152,11 +152,11 @@
 
                 snake.Insert(0, newHead);
 
-                // kiểm tra ăn điểm
+                // kiểm tra ăn điểm và tăng độ dài rắn
                 if (newHead.X == food.X && newHead.Y == food.Y)
                 {
                     score++;
-                    snake.Add(tail); // tăng độ dài rắn
+                    snake.Add(tail);
                     food = new Point(rand.Next(1, width - 2), rand.Next(1, height - 2));
                 }
 
@@ -179,22 +179,25 @@
             Console.WriteLine("0. Exit");
             Console.Write("Please select an option: ");
             choiceMenu = Convert.ToInt32(Console.ReadLine());
+            
             switch (choiceMenu)
             {
                 case 1:
                     int choiceLevel = -1;
                     int level = 0;
+
                     Console.WriteLine("Select Level:");
                     Console.WriteLine("1. Easy");
                     Console.WriteLine("2. Normal");
                     Console.WriteLine("3. Hard");
                     Console.Write("Please select a level: ");
                     choiceLevel = Convert.ToInt32(Console.ReadLine());
+
                     switch (choiceLevel)
                     {
                         case 1:
                             Console.WriteLine("Starting Easy level...");
-                            level = 100;
+                            level = 250;
                             break;
                         case 2:
                             Console.WriteLine("Starting Medium level...");
@@ -202,13 +205,13 @@
                             break;
                         case 3:
                             Console.WriteLine("Starting Hard level...");
-                            level = 200;
+                            level = 50;
                             break;
                         default:
                             Console.WriteLine("Invalid level selected. Please try again.");
                             break;
                     }
-                    
+
                     Game(level);
                     break;
                 case 0:
@@ -219,6 +222,5 @@
                     break;
             }
         } while (choiceMenu != 1);
-
     }
 }
