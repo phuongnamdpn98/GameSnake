@@ -172,14 +172,14 @@
         int choiceMenu = -1;
         Console.CursorVisible = false;
 
-        do
+        while(true)
         {
             Console.WriteLine("Menu:");
             Console.WriteLine("1. Start Game Snake");
             Console.WriteLine("0. Exit");
             Console.Write("Please select an option: ");
             choiceMenu = Convert.ToInt32(Console.ReadLine());
-            
+
             switch (choiceMenu)
             {
                 case 1:
@@ -221,6 +221,6 @@
                     Console.WriteLine("Invalid option. Please try again.");
                     break;
             }
-        } while (choiceMenu != 1);
+        }
     }
 }
