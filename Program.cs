@@ -166,7 +166,7 @@
             }
 
         }
-        Console.SetCursorPosition(0, height + 1);
+        Console.SetCursorPosition(0, height + 2);
         
     }
 
