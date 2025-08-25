@@ -157,14 +157,17 @@
                 {
                     score++;
                     snake.Add(tail);
-                    food = new Point(rand.Next(1, width - 2), rand.Next(1, height - 2));
+                    food = new Point(rand.Next(1, width - 1), rand.Next(1, height - 1));
                 }
 
                 Thread.Sleep(1);
+                Console.SetCursorPosition(0, height + 1);
+                Console.WriteLine("Score: " + score);
             }
 
         }
         Console.SetCursorPosition(0, height + 1);
+        
     }
 
     public static void Main()
@@ -172,7 +175,7 @@
         int choiceMenu = -1;
         Console.CursorVisible = false;
 
-        while(true)
+        while (true)
         {
             Console.WriteLine("Menu:");
             Console.WriteLine("1. Start Game Snake");
